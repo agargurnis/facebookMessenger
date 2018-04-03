@@ -49,13 +49,23 @@ extension FriendsController {
             steve.profileImageName = "steve_profile"
             
             createMessageWithText(text: "Good morning Arvid", friend: steve, minutesAgo: 3, context: context)
-            createMessageWithText(text: "How are you this morning?", friend: steve, minutesAgo: 2, context: context)
-            createMessageWithText(text: "Are you interested in buying an Apple device?", friend: steve, minutesAgo: 1, context: context)
+            createMessageWithText(text: "How are you? Hope you are having a good morning!", friend: steve, minutesAgo: 2, context: context)
+            createMessageWithText(text: "Are you interested in buying an Apple device? We have a wide variety of Apple devices that will suit your needs. Please make your purchase with us.", friend: steve, minutesAgo: 1, context: context)
             
             let donald = NSEntityDescription.insertNewObject(forEntityName: "Friend", into: context) as! Friend
             donald.name = "Donald Trump"
             donald.profileImageName = "donald_trump_profile"
             createMessageWithText(text: "You're fired!", friend: donald, minutesAgo: 5, context: context)
+            
+            let gandhi = NSEntityDescription.insertNewObject(forEntityName: "Friend", into: context) as! Friend
+            gandhi.name = "Mahatma Gandhi"
+            gandhi.profileImageName = "gandhi"
+            createMessageWithText(text: "Love, peace and joy", friend: gandhi, minutesAgo: 60 * 24, context: context)
+            
+            let hillary = NSEntityDescription.insertNewObject(forEntityName: "Friend", into: context) as! Friend
+            hillary.name = "Hilarry Clinton"
+            hillary.profileImageName = "hillary_profile"
+            createMessageWithText(text: "Please vore for me, you did for Billy!", friend: hillary, minutesAgo: 8 * 60 * 24, context: context)
             
             do {
                 try(context.save())
