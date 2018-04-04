@@ -35,17 +35,66 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
         return textField
     }()
     
-    let sendButton: UIButton = {
+    lazy var sendButton: UIButton = {
         let button = UIButton(type: .system)
         button.setTitle("Send", for: .normal)
         let titleColor = UIColor(red: 0, green: 137/255, blue: 249/255, alpha: 1)
         button.setTitleColor(titleColor, for: .normal)
         button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 16)
+        button.addTarget(self, action: #selector(handleSend), for: .touchUpInside)
        return button
     }()
     
+    @objc func handleSend() {
+        
+        let delegate = UIApplication.shared.delegate as! AppDelegate
+        let context = delegate.persistentContainer.viewContext
+        
+        let message = FriendsController.createMessageWithText(text: inputTextField.text!, friend: friend!, minutesAgo: 0, context: context, isSender: true)
+    
+        do {
+            try context.save()
+            
+            messages?.append(message)
+            
+            let item = messages!.count - 1
+            let insertionIndexPath = NSIndexPath(item: item, section: 0)
+            
+            collectionView?.insertItems(at: [insertionIndexPath as IndexPath])
+            collectionView?.scrollToItem(at: insertionIndexPath as IndexPath, at: .top, animated: true)
+            inputTextField.text = nil
+            
+        } catch let err {
+            print(err)
+        }
+    }
+    
+    @objc func simulate() {
+        
+        let delegate = UIApplication.shared.delegate as! AppDelegate
+        let context = delegate.persistentContainer.viewContext
+        let message = FriendsController.createMessageWithText(text: "Here's a message I sent a few minutes ago...", friend: friend!, minutesAgo: 1, context: context)
+        
+        do {
+            try context.save()
+            
+            messages?.append(message)
+            messages = messages?.sorted(by: {$0.date!.compare($1.date! as Date) == .orderedAscending})
+            
+            if let item = messages?.index(of: message) {
+                let receivinIndexPath = NSIndexPath(item: item, section: 0)
+                collectionView?.insertItems(at: [receivinIndexPath as IndexPath])
+            }
+
+        } catch let err {
+            print(err)
+        }
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Simulate", style: .plain, target: self, action: #selector(simulate))
         
         tabBarController?.tabBar.isHidden = true
         collectionView?.backgroundColor = .white
