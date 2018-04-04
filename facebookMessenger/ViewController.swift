@@ -16,6 +16,11 @@ class FriendsController: UICollectionViewController, UICollectionViewDelegateFlo
     var messages: [Message]?
     var friends: [Friend]?
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        tabBarController?.tabBar.isHidden = false
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
